@@ -119,166 +119,164 @@
         string ShareNumber = TryGetValueFromDist(dist, "Share Number");
         string URL = TryGetValueFromDist(dist, "URL");
 
-//        // Define the HTML string with the variable name
-//        string htmlContent = $@"
-//<!DOCTYPE html>
-//<html lang='en'>
-//<head>
-//    <meta charset='UTF-8'>
-//    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-//    <title>Series A Preferred Special Proxy Vote</title>
-//</head>
-//<body style='font-family: Arial, sans-serif; margin: 40px; line-height: 1.6;'>
-//    <div style='max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px;'>
-//        <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;'>
-//            <div style='text-align: left;'>
-//                <p>{Name}</p>
-//                <p>{Address1}</p>
-//                <p>{Address2}</p>
-//                <p>{City}, {State} {Zip}</p>
-//            </div>
-//            <div style='text-align: right; color: #007bff; font-size: 1.2em; font-weight: bold;'>
-//                <p>Vote Now</p>
-//            </div>
-//        </div>
-//        <h2 style='color: #333;'>Re: CareCloud Series A Preferred Special Proxy Vote</h2>
-//        <h2 style='color: #333;'>Shareholder: {Name}</h2>
-//        <h2 style='color: #333;'>Number of shares entitled to vote: {ShareNumber}</h2>
-//        <div style='text-align: right; margin: 20px 0;'>
-//            <p>SCAN HERE</p>
-//            <img src='qr-code-placeholder.png' alt='QR Code' style='max-width: 150px;'>
-//        </div>
-//        <div style='margin-top: 20px;'>
-//            <p>Dear {Name},</p>
-//            <p>We are pleased to share with you that as of today 87% of your fellow Series A Preferred Shareholders have submitted proxy votes in favor of both proposals being considered in the special proxy vote. While there has been tremendous support, a passing vote will require a minimum quorum which has not yet been met – we are close but your vote is critical.</p>
-//            <p>As you may have seen:</p>
-//            <ul style='list-style-type: disc; padding-left: 20px;'>
-//                <li>Glass Lewis, a leading proxy vote advisory firm, recommends a vote “FOR” both proposals.</li>
-//                <li>87% of Series A Shareholders indicated a vote “FOR” both proposals as of August 8, 2024.</li>
-//                <li>For your vote to count you’ll need to vote “FOR” both proposals by August 21, 2024.</li>
-//            </ul>
-//            <h3 style='color: #333;'>How to Cast Your Vote:</h3>
-//            <p>To ensure your vote is counted you have several options:</p>
-//            <ul style='list-style-type: disc; padding-left: 20px;'>
-//                <li><strong>Vote Securely Online:</strong> Scan the above QR Code or visit <a href='{URL}' style='color: #007bff; text-decoration: none;'>the link</a>.</li>
-//                <li><strong>Call to Vote:</strong> You can vote by phone now or reach out with questions regarding the voting process at 844-874-6164.</li>
-//                <li><strong>Send an Email:</strong> Send an email today to <a href='mailto:carecloud@allianceadvisors.com' style='color: #007bff; text-decoration: none;'>carecloud@allianceadvisors.com</a> indicating that you would like to vote and then you will receive voting instructions.</li>
-//            </ul>
-//            <p>To learn more about the special proxy it is important that you review the Series A Preferred special proxy filings carefully which are available on the SEC’s website and at <a href='https://ir.carecloud.com/series-a-special-proxy' style='color: #007bff; text-decoration: none;'>https://ir.carecloud.com/series-a-special-proxy</a>.</p>
-//            <p>Please don’t hesitate to contact me via email at <a href='mailto:ir@carecloud.com' style='color: #007bff; text-decoration: none;'>ir@carecloud.com</a> or on my cell at 732-873-1351 if I can be of any assistance.</p>
-//            <p>Thank you for your continued support of CareCloud.</p>
+string name = "Hadi Chaudry";
+string address = "7 Clyde Road";
+string location = "NJ, Somerset 08873";
+string shareholderName = "Hadi Chardry";
+string numberOfShares = "123456";
+string emailAddress = "ir@carecloud.com";
+string phone = "732-873-1351";
 
-//            <div style='margin-top: 40px;'>
-//                <p>Sincerely,</p>
-//                <p>Stephen A. Snyder<br>President</p>
-//            </div>
-//        </div>
-//    </div>
-//</body>
-//</html>";
-        string htmlContent = $@"
+string htmlContent = $@"
 <!DOCTYPE html>
-<html lang='en'>
+<html lang=""en"">
+
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Series A Preferred Special Proxy Vote</title>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Document</title>
     <style>
+        html {{ -webkit-print-color-adjust: exact; }}
         body {{
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-            font-size: 12pt;
+            line-height: 27px;
         }}
-        .container {{
-            max-width: 180mm;
-            margin: 20mm auto;
-            padding: 20mm;
-            border: 1px solid #ddd;
+
+        .wordletter {{
+            width: 1027px;
+            margin: 0 auto;
         }}
-        .header {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+
+        table {{
+            width: 100%;
+            font-size: 20px;
         }}
-        .header div {{
-            flex: 1;
+        .text-center{{
+            text-align: center;
         }}
-        .header-right {{
-            text-align: right;
-            color: #007bff;
-            font-size: 1.2em;
+        ol li{{
+            margin-bottom: 10px;
+        }}
+        ol{{
+            background-color: #ccc;
+        }}
+        u{{
             font-weight: bold;
         }}
-        .content {{
-            margin-top: 20px;
-        }}
-        h2, h3 {{
-            color: #333;
-        }}
-        ul {{
-            list-style-type: disc;
-            padding-left: 20px;
-        }}
-        .footer {{
-            margin-top: 40px;
+        ul li{{
+            margin-bottom: 10px;
         }}
     </style>
 </head>
-<body>
-    <div class='container'>
-        <div class='header'>
-            <div>
-                <p>{Name}</p>
-                <p>{Address1}</p>
-                <p>{Address2}</p>
-                <p>{City}, {State} {Zip}</p>
-            </div>
-            <div class='header-right'>
-                <p>Vote Now</p>
-            </div>
-        </div>
-        <h2>Re: CareCloud Series A Preferred Special Proxy Vote</h2>
-        <h2>Shareholder: {Name}</h2>
-        <h2>Number of shares entitled to vote: {ShareNumber}</h2>
-        <div style='text-align: right; margin: 20px 0;'>
-            <p>SCAN HERE</p>
-            <img src='qr-code-placeholder.png' alt='QR Code' style='max-width: 100px;'>
-        </div>
-        <div class='content'>
-            <p>Dear {Name},</p>
-            <p>We are pleased to share with you that as of today 87% of your fellow Series A Preferred Shareholders have submitted proxy votes in favor of both proposals being considered in the special proxy vote. While there has been tremendous support, a passing vote will require a minimum quorum which has not yet been met – we are close but your vote is critical.</p>
-            <p>As you may have seen:</p>
-            <ul>
-                <li>Glass Lewis, a leading proxy vote advisory firm, recommends a vote “FOR” both proposals.</li>
-                <li>87% of Series A Shareholders indicated a vote “FOR” both proposals as of August 8, 2024.</li>
-                <li>For your vote to count you’ll need to vote “FOR” both proposals by August 21, 2024.</li>
-            </ul>
-            <h3>How to Cast Your Vote:</h3>
-            <p>To ensure your vote is counted you have several options:</p>
-            <ul>
-                <li><strong>Vote Securely Online:</strong> Scan the above QR Code or visit <a href='{URL}' style='color: #007bff;'>the link</a>.</li>
-                <li><strong>Call to Vote:</strong> You can vote by phone now or reach out with questions regarding the voting process at 844-874-6164.</li>
-                <li><strong>Send an Email:</strong> Send an email today to <a href='mailto:carecloud@allianceadvisors.com' style='color: #007bff;'>carecloud@allianceadvisors.com</a> indicating that you would like to vote and then you will receive voting instructions.</li>
-            </ul>
-            <p>To learn more about the special proxy it is important that you review the Series A Preferred special proxy filings carefully which are available on the SEC’s website and at <a href='https://ir.carecloud.com/series-a-special-proxy' style='color: #007bff;'>https://ir.carecloud.com/series-a-special-proxy</a>.</p>
-            <p>Please don’t hesitate to contact me via email at <a href='mailto:ir@carecloud.com' style='color: #007bff;'>ir@carecloud.com</a> or on my cell at 732-873-1351 if I can be of any assistance.</p>
-            <p>Thank you for your continued support of CareCloud.</p>
 
-            <div class='footer'>
-                <p>Sincerely,</p>
-                <p>Stephen A. Snyder<br>President</p>
-            </div>
-        </div>
+<body>
+
+    <div class=""wordletter"">
+        <table>
+            <tr>
+                <td colspan=""3"">{Name}</td>
+            </tr>
+            <tr>
+                <td colspan=""3"">{Address1}</td>
+            </tr>
+            <tr>
+                <td>{City},{State} {Zip}</td>
+            </tr>
+        </table>
+
+        <table style=""margin-top: 20px; vertical-align: top;"" align=""top"">
+            <tr>
+                <td width=""50"" style=""vertical-align: top;""><strong>Re:</strong></td>
+                <td style=""vertical-align: top; width:600px;"">
+                   
+                                <table>
+                                    <tr>
+                                        <td>CareCloud Series A Preferred Special Proxy Vote</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shareholder: {Name}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Number of shares entitled to vote: {ShareNumber}</td>
+                                    </tr>
+                                </table>
+                           
+                </td>
+                <td align=""right""  style=""vertical-align: top; text-align: center;"">
+                    <table>
+                        <tr>
+                            <td>Vote Now</td>
+                        </tr>
+                        <tr>
+                            <td><img width=""100"" src=""images.png""></td>
+                        </tr>
+                        <tr>
+                            <td><strong>SCAN HERE</strong></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <table >
+            <tr>
+                <td colspan=""2"">
+                    <p>Dear {Name},</p>
+                    <p>We are pleased to share with you that as of today 87% of your fellow Series A Preferred Shareholders
+                        have submitted proxy votes in favor of both proposals being considered in the special proxy vote.
+                        While there has been tremendous support a passing vote will require a minimum quorum which has not
+                        yet been met – we are close but your vote is critical.</p>
+                    <p>As you may have seen:</p>
+                    <ul>
+                        <li>Glass Lewis, a leading proxy vote advisory firm, recommends a vote <strong>“FOR”</strong> both proposals.</li>
+                        <li>87% of Series A Shareholders indicated a vote <strong>“FOR”</strong> both proposals as of August 8, 2024.</li>
+                        <li>For your vote to count you’ll need to vote <strong>“FOR”</strong> both proposals by <strong><u>August 21, 2024.</u></strong></li>
+                    </ul>
+                    <p style=""font-size: 25px;""><strong><u>How to Cast Your Vote:</u></strong></p>
+                    <p>To ensure your vote is counted you have several options:</p>
+                </td>
+            </tr>
+        </table>
+        
+        <table style=""background-color: #ccc;"">
+            <tr>
+                <td style=""background-color: #ccc;"">
+                    <ol>
+                        <li><u>Vote Securely Online:</u> Scan the above QR Code or visit &lt;URL&gt;.</li>
+                        <li><u>Call to Vote:</u> You can vote by phone now or reach out with questions regarding the voting process at<br> 844-874-6164.</li>
+                        <li><u>Send an Email:</u> Send an email today to carecloud@allianceadvisors.com indicating that you would like to vote and then you will receive voting instructions.</li>
+                    </ol>
+                </td>
+            </tr>
+        </table>
+        
+        <table>
+            <tr>
+                <td colspan=""2"">
+                    <p>To learn more about the special proxy, it is important that you review the Series A Preferred special
+                        proxy filings carefully, which are available on the SEC’s website and at <a
+                            href=""https://ir.carecloud.com/series-a-special-proxy"">https://ir.carecloud.com/series-a-special-proxy</a>.
+                    </p>
+                    <p>Please don’t hesitate to contact me via email (<a
+                            href=""mailto:{emailAddress}"">{emailAddress}</a>) or on my cell ({phone}) if I can be of any assistance. Thank you for your continued support of CareCloud.</p>
+                    <p>Sincerely,</p>
+                    <p>Stephen A. Snyder<br />President</p>
+                </td>
+            </tr>
+        </table>
     </div>
+
 </body>
+
 </html>";
+
+
 
         await JSRuntime.InvokeVoidAsync("htmlToPdf", htmlContent, "sample.pdf");
 
     }
+    
     private async Task DownloadFile(byte[] fileBytes, string fileName)
     {
         var base64 = Convert.ToBase64String(fileBytes);
