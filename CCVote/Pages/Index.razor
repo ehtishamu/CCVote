@@ -1,0 +1,290 @@
+﻿@page "/"
+
+@using OfficeOpenXml
+@using Microsoft.AspNetCore.Components.Forms
+@inject IJSRuntime JSRuntime
+@using DinkToPdf
+@using DinkToPdf.Contracts;
+@inject PdfService PdfService
+
+
+
+
+<h3>Upload Excel File</h3>
+
+<InputFile OnChange="ImportExcelFile" />
+
+@if (KeyValuePairs != null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @foreach(var val in headersValues){
+                <th>@val</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dict in KeyValuePairs)
+            {
+                <tr>
+                @foreach (var kvp in dict)
+                {
+                    
+                        <td>@kvp.Value</td>
+                 
+                }
+                    <td><button @onclick="() => GeneratePdf(dict)">Generate Letter</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Dictionary<string, string>[] KeyValuePairs { get; set; }
+    private string[] headersValues { get; set; }
+
+    public string TryGetValueFromDist(Dictionary<string, string> rowData, string key)
+    {
+        rowData.TryGetValue(key, out string colValue);
+        return colValue;
+    }
+
+    async Task ImportExcelFile(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(1))
+        {
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // copy data from file to memory stream
+                    await file.OpenReadStream().CopyToAsync(ms);
+                    // positions the cursor at the beginning of the memory stream
+                    ms.Position = 0;
+
+                    // create ExcelPackage from memory stream
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (ExcelPackage package = new ExcelPackage(ms))
+                    {
+                        ExcelWorksheet ws = package.Workbook.Worksheets.FirstOrDefault();
+                        int colCount = ws.Dimension.End.Column;
+                        int rowCount = ws.Dimension.End.Row;
+                        var s = ws.Cells[2, 2].Value;
+                        int rows = ws.Dimension.Rows;
+                        int cols = ws.Dimension.Columns;
+
+                        // Assuming the first row contains headers (keys)
+                        var headers = new string[cols];
+                        for (int col = 1; col <= cols; col++)
+                        {
+                            headers[col - 1] = ws.Cells[1, col].Text;
+                        }
+                        headersValues = headers;
+                        KeyValuePairs = new Dictionary<string, string>[rows - 1];
+                        for (int row = 2; row <= rows; row++) // Start from row 2 to skip headers
+                        {
+                            var kvp = new Dictionary<string, string>();
+                            for (int col = 1; col <= cols; col++)
+                            {
+                                var key = headers[col - 1];
+                                var value = ws.Cells[row, col].Text;
+                                kvp.Add(key, value);
+                            }
+                            KeyValuePairs[row - 2] = kvp;
+                        }
+                        // rest of the code here...
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+    }
+
+
+    
+    public async Task GeneratePdf(Dictionary<string,string> dist)
+    {
+        // Define the name variable
+        string Name = TryGetValueFromDist(dist,"Name");
+        string Address1 = TryGetValueFromDist(dist,"Address 1");
+        string Address2 = TryGetValueFromDist(dist,"Address 2");
+        string City = TryGetValueFromDist(dist,"City");
+        string State = TryGetValueFromDist(dist,"State");
+        string Zip = TryGetValueFromDist(dist,"Zip");
+        string ShareNumber = TryGetValueFromDist(dist, "Share Number");
+        string URL = TryGetValueFromDist(dist, "URL");
+
+//        // Define the HTML string with the variable name
+//        string htmlContent = $@"
+//<!DOCTYPE html>
+//<html lang='en'>
+//<head>
+//    <meta charset='UTF-8'>
+//    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+//    <title>Series A Preferred Special Proxy Vote</title>
+//</head>
+//<body style='font-family: Arial, sans-serif; margin: 40px; line-height: 1.6;'>
+//    <div style='max-width: 800px; margin: auto; border: 1px solid #ddd; padding: 20px;'>
+//        <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;'>
+//            <div style='text-align: left;'>
+//                <p>{Name}</p>
+//                <p>{Address1}</p>
+//                <p>{Address2}</p>
+//                <p>{City}, {State} {Zip}</p>
+//            </div>
+//            <div style='text-align: right; color: #007bff; font-size: 1.2em; font-weight: bold;'>
+//                <p>Vote Now</p>
+//            </div>
+//        </div>
+//        <h2 style='color: #333;'>Re: CareCloud Series A Preferred Special Proxy Vote</h2>
+//        <h2 style='color: #333;'>Shareholder: {Name}</h2>
+//        <h2 style='color: #333;'>Number of shares entitled to vote: {ShareNumber}</h2>
+//        <div style='text-align: right; margin: 20px 0;'>
+//            <p>SCAN HERE</p>
+//            <img src='qr-code-placeholder.png' alt='QR Code' style='max-width: 150px;'>
+//        </div>
+//        <div style='margin-top: 20px;'>
+//            <p>Dear {Name},</p>
+//            <p>We are pleased to share with you that as of today 87% of your fellow Series A Preferred Shareholders have submitted proxy votes in favor of both proposals being considered in the special proxy vote. While there has been tremendous support, a passing vote will require a minimum quorum which has not yet been met – we are close but your vote is critical.</p>
+//            <p>As you may have seen:</p>
+//            <ul style='list-style-type: disc; padding-left: 20px;'>
+//                <li>Glass Lewis, a leading proxy vote advisory firm, recommends a vote “FOR” both proposals.</li>
+//                <li>87% of Series A Shareholders indicated a vote “FOR” both proposals as of August 8, 2024.</li>
+//                <li>For your vote to count you’ll need to vote “FOR” both proposals by August 21, 2024.</li>
+//            </ul>
+//            <h3 style='color: #333;'>How to Cast Your Vote:</h3>
+//            <p>To ensure your vote is counted you have several options:</p>
+//            <ul style='list-style-type: disc; padding-left: 20px;'>
+//                <li><strong>Vote Securely Online:</strong> Scan the above QR Code or visit <a href='{URL}' style='color: #007bff; text-decoration: none;'>the link</a>.</li>
+//                <li><strong>Call to Vote:</strong> You can vote by phone now or reach out with questions regarding the voting process at 844-874-6164.</li>
+//                <li><strong>Send an Email:</strong> Send an email today to <a href='mailto:carecloud@allianceadvisors.com' style='color: #007bff; text-decoration: none;'>carecloud@allianceadvisors.com</a> indicating that you would like to vote and then you will receive voting instructions.</li>
+//            </ul>
+//            <p>To learn more about the special proxy it is important that you review the Series A Preferred special proxy filings carefully which are available on the SEC’s website and at <a href='https://ir.carecloud.com/series-a-special-proxy' style='color: #007bff; text-decoration: none;'>https://ir.carecloud.com/series-a-special-proxy</a>.</p>
+//            <p>Please don’t hesitate to contact me via email at <a href='mailto:ir@carecloud.com' style='color: #007bff; text-decoration: none;'>ir@carecloud.com</a> or on my cell at 732-873-1351 if I can be of any assistance.</p>
+//            <p>Thank you for your continued support of CareCloud.</p>
+
+//            <div style='margin-top: 40px;'>
+//                <p>Sincerely,</p>
+//                <p>Stephen A. Snyder<br>President</p>
+//            </div>
+//        </div>
+//    </div>
+//</body>
+//</html>";
+        string htmlContent = $@"
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Series A Preferred Special Proxy Vote</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            font-size: 12pt;
+        }}
+        .container {{
+            max-width: 180mm;
+            margin: 20mm auto;
+            padding: 20mm;
+            border: 1px solid #ddd;
+        }}
+        .header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }}
+        .header div {{
+            flex: 1;
+        }}
+        .header-right {{
+            text-align: right;
+            color: #007bff;
+            font-size: 1.2em;
+            font-weight: bold;
+        }}
+        .content {{
+            margin-top: 20px;
+        }}
+        h2, h3 {{
+            color: #333;
+        }}
+        ul {{
+            list-style-type: disc;
+            padding-left: 20px;
+        }}
+        .footer {{
+            margin-top: 40px;
+        }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <div>
+                <p>{Name}</p>
+                <p>{Address1}</p>
+                <p>{Address2}</p>
+                <p>{City}, {State} {Zip}</p>
+            </div>
+            <div class='header-right'>
+                <p>Vote Now</p>
+            </div>
+        </div>
+        <h2>Re: CareCloud Series A Preferred Special Proxy Vote</h2>
+        <h2>Shareholder: {Name}</h2>
+        <h2>Number of shares entitled to vote: {ShareNumber}</h2>
+        <div style='text-align: right; margin: 20px 0;'>
+            <p>SCAN HERE</p>
+            <img src='qr-code-placeholder.png' alt='QR Code' style='max-width: 100px;'>
+        </div>
+        <div class='content'>
+            <p>Dear {Name},</p>
+            <p>We are pleased to share with you that as of today 87% of your fellow Series A Preferred Shareholders have submitted proxy votes in favor of both proposals being considered in the special proxy vote. While there has been tremendous support, a passing vote will require a minimum quorum which has not yet been met – we are close but your vote is critical.</p>
+            <p>As you may have seen:</p>
+            <ul>
+                <li>Glass Lewis, a leading proxy vote advisory firm, recommends a vote “FOR” both proposals.</li>
+                <li>87% of Series A Shareholders indicated a vote “FOR” both proposals as of August 8, 2024.</li>
+                <li>For your vote to count you’ll need to vote “FOR” both proposals by August 21, 2024.</li>
+            </ul>
+            <h3>How to Cast Your Vote:</h3>
+            <p>To ensure your vote is counted you have several options:</p>
+            <ul>
+                <li><strong>Vote Securely Online:</strong> Scan the above QR Code or visit <a href='{URL}' style='color: #007bff;'>the link</a>.</li>
+                <li><strong>Call to Vote:</strong> You can vote by phone now or reach out with questions regarding the voting process at 844-874-6164.</li>
+                <li><strong>Send an Email:</strong> Send an email today to <a href='mailto:carecloud@allianceadvisors.com' style='color: #007bff;'>carecloud@allianceadvisors.com</a> indicating that you would like to vote and then you will receive voting instructions.</li>
+            </ul>
+            <p>To learn more about the special proxy it is important that you review the Series A Preferred special proxy filings carefully which are available on the SEC’s website and at <a href='https://ir.carecloud.com/series-a-special-proxy' style='color: #007bff;'>https://ir.carecloud.com/series-a-special-proxy</a>.</p>
+            <p>Please don’t hesitate to contact me via email at <a href='mailto:ir@carecloud.com' style='color: #007bff;'>ir@carecloud.com</a> or on my cell at 732-873-1351 if I can be of any assistance.</p>
+            <p>Thank you for your continued support of CareCloud.</p>
+
+            <div class='footer'>
+                <p>Sincerely,</p>
+                <p>Stephen A. Snyder<br>President</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>";
+
+        await JSRuntime.InvokeVoidAsync("htmlToPdf", htmlContent, "sample.pdf");
+
+    }
+    private async Task DownloadFile(byte[] fileBytes, string fileName)
+    {
+        var base64 = Convert.ToBase64String(fileBytes);
+
+
+        await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", base64, fileName);
+    }
+}
+
