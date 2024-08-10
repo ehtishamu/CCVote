@@ -27,17 +27,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="pdfInterop.js"></script>
 
-    <script>
-        <script>
-        window.BlazorDownloadFile = (base64, fileName) => {
-            const link = document.createElement('a');
-            link.href = `data:application/pdf;base64,${base64}`;
-            link.download = fileName;
-            link.click();
-        };
-    </script>
 
-    </script>
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
