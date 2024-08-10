@@ -16,6 +16,10 @@
 
 @if (KeyValuePairs != null)
 {
+    @if (!string.IsNullOrEmpty(pdfFileUrl))
+{
+    <p>PDF created! <a href="@pdfFileUrl" >Download PDF</a></p>
+}
     <button @onclick="() => GenerateAll()">Generate All Letter</button>
     <table class="table table-striped">
         <thead>
@@ -53,7 +57,8 @@
 @code {
     private Dictionary<string, string>[] KeyValuePairs { get; set; }
     private string[] headersValues { get; set; }
-
+        private string pdfFileUrl;
+    private string htmlAll = "";
     public string TryGetValueFromDist(Dictionary<string, string> rowData, string key)
     {
         rowData.TryGetValue(key, out string colValue);
@@ -377,11 +382,11 @@
 
             string htmlContent = $@"
 
-      <div class=""wordletter"">
+      <div class=""wordletter"" >
 <table align=""center"" class=""text-center"">
 <tr>
 <td align=""center"">
-<img style=""margin: 0 auto;"" width=""200"" src=""carecloud.png"">
+<img style=""margin: 0 auto;"" width=""200"" src=""https://localhost:7018/carecloud.png"">
 
 </td>
 </tr>
@@ -429,7 +434,7 @@
                                 <td>Vote Now</td>
                             </tr>
                             <tr>
-                                <td>  <img width=""80"" src=""img{i}.jpg""></td>
+                                <td>  <img width=""80"" src=""https://localhost:7018/img{i}.jpg""></td>
                             </tr>
                             <tr>
                                 <td style=""font-size:14px""><strong style=""font-size:14px"">SCAN HERE</strong></td>
@@ -481,23 +486,27 @@
 
                     <p style = ""text-align: justify;"">Please don’t hesitate to contact me via email (<a href=""mailto:{emailAddress}"">{emailAddress}</a>) or on my cell ({phone}) if I can be of any assistance. Thank you for your continued support of CareCloud.</p>
                     <p style=""margin-bottom: 5px;"">Sincerely,</p>
-                    <p style=""margin-bottom: 0px;""><img style=""margin: 0 auto; width:auto; height: 40px;""  src=""signature.jpg""></p>
+                    <p style=""margin-bottom: 0px;""><img style=""margin: 0 auto; width:auto; height: 40px;""  src=""https://localhost:7018/signature.jpg""></p>
                     <p style=""margin-bottom: 5px;"">Stephen A. Snyder<br />President</p>
                 </td>
             </tr>
         </table>
-    </div><div style=""display:block; clear:both; page-break-after:auto;""></div>";
+    </div><div style=""display:block; clear:both; page-break-after: always;""></div>";
 
             allhtmls += htmlContent;
 
         }
         allhtmls += @"
-    
+
 </body>
 
 </html>";
-        await JSRuntime.InvokeVoidAsync("htmlToPdfAll", allhtmls, "allfile.pdf");
-       
+        htmlAll = allhtmls;
+        await SendPostRequestHTML();
+      // await JSRuntime.InvokeAsync<string>("open", $"{pdfFileUrl}", "_blank");
+        //await JSRuntime.InvokeVoidAsync("openPdfInNewTab", pdfFileUrl);
+        //await JSRuntime.InvokeVoidAsync("htmlToPdfAll", allhtmls, "allfile.pdf");
+
     }
 
     private async Task SendPostRequest()
@@ -511,7 +520,38 @@
             var response = await Http.PostAsJsonAsync(url, requestData);
             if (response.IsSuccessStatusCode)
             {
-               var responseMessage = await response.Content.ReadAsStringAsync();
+                var responseMessage = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                var responseMessage = $"Error: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            var responseMessage = $"Exception: {ex.Message}";
+        }
+    }
+    private async Task SendPostRequestHTML()
+    {
+        var url = "https://localhost:7029/api/QR/convert";
+        var modeldata =new 
+            {
+            htmlContent=htmlAll
+        };
+        var requestData = modeldata;
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync(url, requestData);
+            if (response.IsSuccessStatusCode)
+            {
+                 var pdfBytes = await response.Content.ReadAsByteArrayAsync();
+
+                // Create a URL for the PDF file
+                pdfFileUrl = $"data:application/pdf;base64,{Convert.ToBase64String(pdfBytes)}";
+
+
             }
             else
             {

@@ -58,3 +58,10 @@ window.htmlToPdfAll = function (htmlContent, fileName) {
         autoPaging: true,
     });
 };
+
+function openPdfInNewTab(pdfData) {
+    const blob = new Blob([pdfData], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+}
+

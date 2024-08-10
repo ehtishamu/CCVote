@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Aspose.BarCode" Version="24.7.0" />
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
