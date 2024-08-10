@@ -27,7 +27,7 @@ namespace API.Controllers
                 var generator = new BarcodeGenerator(EncodeTypes.QR);
                 // Specify code text to encode
                
-                    KeyValuePairs.ToList()[i].TryGetValue("URL",out string colValue);
+                    KeyValuePairs.ToList()[i].TryGetValue("Link",out string colValue);
                 generator.CodeText = colValue;
                 // Specify the size of the image
                 generator.Parameters.Barcode.XDimension.Pixels = 8;
@@ -58,7 +58,7 @@ namespace API.Controllers
                     {
                         ColorMode = ColorMode.Color,
                         Orientation = Orientation.Portrait,
-                        PaperSize = PaperKind.A4,
+                        PaperSize = PaperKind.Letter,
                     },
                     Objects = {
                         new ObjectSettings

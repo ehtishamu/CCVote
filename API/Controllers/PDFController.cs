@@ -73,7 +73,7 @@ namespace PdfCombinerAPI.Controllers
                     {
                         ColorMode = ColorMode.Color,
                         Orientation = Orientation.Portrait,
-                        PaperSize = PaperKind.A4,
+                        PaperSize = PaperKind.Letter,
                     },
                     Objects = {
                         new ObjectSettings

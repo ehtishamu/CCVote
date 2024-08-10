@@ -124,15 +124,14 @@
 
     public async Task GeneratePdf(Dictionary<string,string> dist, int i)
     {
-        // Define the name variable
-        string Name = TryGetValueFromDist(dist,"Name");
-        string Address1 = TryGetValueFromDist(dist,"Address 1");
-        string Address2 = TryGetValueFromDist(dist,"Address 2");
-        string City = TryGetValueFromDist(dist,"City");
-        string State = TryGetValueFromDist(dist,"State");
-        string Zip = TryGetValueFromDist(dist,"Zip");
-        string ShareNumber = TryGetValueFromDist(dist, "Share Number");
-        string URL = TryGetValueFromDist(dist, "URL");
+        string Name = TryGetValueFromDist(dist, "First") + " " + TryGetValueFromDist(dist, "Last");
+        string Address1 = TryGetValueFromDist(dist, "Street");
+        string Address2 = TryGetValueFromDist(dist, "Address 2");
+        string City = TryGetValueFromDist(dist, "City");
+        string State = TryGetValueFromDist(dist, "State");
+        string Zip = TryGetValueFromDist(dist, "Zip");
+        string ShareNumber = TryGetValueFromDist(dist, "Shares");
+        string URL = TryGetValueFromDist(dist, "Link");
 
 
         string emailAddress = "ir@carecloud.com";
@@ -147,6 +146,46 @@
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>Document</title>
     <style>
+@media
+screen {{   html {{ -webkit-print-color-adjust: exact; }}
+        body {{
+            margin: 0;
+            padding: 0;
+            line-height: 18px;
+            font-size: 14px;
+            text-align: justify;
+            font-family: ""Times New Roman"", Times, serif;
+        }}
+        .jspdf-only {{     display: none; }}
+
+        .wordletter {{
+            width: 1027px;
+            margin: 0 auto;
+        }}
+
+        table {{
+            width: 100%;
+            font-size: 14px;
+            text-align: justify;
+        }}
+        .text-center{{
+            text-align: center;
+        }}
+        ol li{{
+            margin-bottom: 20px;
+        }}
+        ol{{
+            background-color: #ccc;
+        }}
+        u{{
+            font-weight: bold;
+        }}
+        ul li{{
+            margin-bottom: 10px;
+        }}
+        p{{
+            margin-bottom: 5px;
+        }}}}
         html {{ -webkit-print-color-adjust: exact; }}
         body {{
             margin: 0;
@@ -156,6 +195,7 @@
             text-align: justify;
             font-family: ""Times New Roman"", Times, serif;
         }}
+        .jspdf-only {{     display: none; }}
 
         .wordletter {{
             width: 1027px;
@@ -322,7 +362,52 @@
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>Document</title>
     <style>
+
+
+
         html {{ -webkit-print-color-adjust: exact; }}
+        body {{
+            margin: 0;
+            padding: 0;
+           line-height: 18px;
+            font-size: 14px;
+            text-align: justify;
+        }}
+       .dinktopdf-only {{    display: none; }}
+       .wordletter {{
+            width: 1027px;
+            margin: 0 auto;
+        }}
+        #page-break {{
+        page-break-before: always; /* or 'page-break-after: always;' depending on the requirement */
+    }}
+        table {{
+            width: 100%;
+            font-size: 14px;
+            text-align: justify;
+        }}
+
+        .text-center{{
+            text-align: center;
+        }}
+        ol li{{
+            margin-bottom: 20px;
+        }}
+        ol{{
+            background-color: #ccc;
+        }}
+        u{{
+            font-weight: bold;
+        }}
+        ul li{{
+            margin-bottom: 10px;
+        }}
+        p{{
+            margin-bottom: 5px;
+        }}
+
+        @media print {
+                html {{ -webkit-print-color-adjust: exact; }}
         body {{
             margin: 0;
             padding: 0;
@@ -340,7 +425,7 @@
     }}
         table {{
             width: 100%;
-            font-size: 14px;
+            font-size: 20px;
             text-align: justify;
         }}
         .text-center{{
@@ -361,6 +446,7 @@
         p{{
             margin-bottom: 5px;
         }}
+        }
     </style>
 </head>
 
@@ -369,14 +455,14 @@
         {
             var dist = KeyValuePairs[i];
             // Define the name variable
-            string Name = TryGetValueFromDist(dist, "Name");
-            string Address1 = TryGetValueFromDist(dist, "Address 1");
-            string Address2 = TryGetValueFromDist(dist, "Address 2");
-            string City = TryGetValueFromDist(dist, "City");
-            string State = TryGetValueFromDist(dist, "State");
-            string Zip = TryGetValueFromDist(dist, "Zip");
-            string ShareNumber = TryGetValueFromDist(dist, "Share Number");
-            string URL = TryGetValueFromDist(dist, "URL");
+        string Name = TryGetValueFromDist(dist, "First") + " " + TryGetValueFromDist(dist, "Last");
+        string Address1 = TryGetValueFromDist(dist, "Street");
+        string Address2 = TryGetValueFromDist(dist, "Address 2");
+        string City = TryGetValueFromDist(dist, "City");
+        string State = TryGetValueFromDist(dist, "State");
+        string Zip = TryGetValueFromDist(dist, "Zip");
+        string ShareNumber = TryGetValueFromDist(dist, "Shares");
+        string URL = TryGetValueFromDist(dist, "Link");
             string emailAddress = "ir@carecloud.com";
             string phone = "732-873-1351";
 
@@ -386,58 +472,57 @@
 <table align=""center"" class=""text-center"">
 <tr>
 <td align=""center"">
-<img style=""margin: 0 auto;"" width=""200"" src=""https://localhost:7018/carecloud.png"">
-
+<img style=""margin: 0 auto;"" width=""250"" src=""https://localhost:7018/carecloud.png"">
 </td>
 </tr>
 </table>
-<table>
+<table style=""margin-top:15px;"">
   <tr>
-                    <td width=""600"">
+                    <td width=""650"">
                             <table>
 
                                 <tr>
 
-                                    <td colspan=""3"">{Name}</td>
+                                    <td colspan=""3"" style=""line-height: 22px;font-size: 20px;"">{Name}</td>
                                 </tr>
                                 <tr>
 
-                                    <td colspan=""3"">{Address1}</td>
+                                    <td style=""line-height: 22px;font-size: 20px;"" colspan=""3"">{Address1}</td>
                                 </tr>
                                 <tr>
 
-                                    <td colspan=""3"">{City},{State} {Zip}</td>
+                                    <td style=""line-height: 22px;font-size: 20px;"" colspan=""3"">{City},{State} {Zip}</td>
 
                                 </tr>
-                                <tr >
-                                    <td width=""50"" style=""vertical-align: top; ""><strong style=""margin-top: 20px; display: block;"">Re:</strong></td>
-                                    <td>
+                                <tr style=""vertical-align: top;"">
+                                    <td style=""line-height: 22px;font-size: 20px; text-align:left;"" width=""50"" align=""left"" style=""vertical-align: top;""><strong style=""margin-top:27px; vertical-align: top; display:block"">Re:</strong></td>
+                                    <td style=""line-height: 22px;font-size: 20px;"">
 
-                                        <table style=""margin-top: 20px;"">
+                                        <table style=""margin-top:25px; vertical-align: top;"">
                                             <tr>
-                                                <td>CareCloud Series A Preferred Special Proxy Vote</td>
+                                                <td style=""line-height: 22px;font-size: 20px;"">CareCloud Series A Preferred Special Proxy Vote</td>
                                             </tr>
                                             <tr>
-                                                <td>Shareholder: {Name}</td>
+                                                <td style=""line-height: 22px;font-size: 20px;"">Shareholder: {Name}</td>
                                             </tr>
                                             <tr>
-                                                <td>Number of shares entitled to vote: {ShareNumber}</td>
+                                                <td style=""line-height: 22px;font-size: 20px;"">Number of shares entitled to vote: {ShareNumber}</td>
                                             </tr>
                                         </table>                         
                             </td>
                                 </tr>
                             </table>
                     </td>
-                    <td width=""100"" align=""right"" style=""vertical-align: bottom; text-align: center;"">
+                    <td style=""line-height: 15px;font-size: 18px;"" width=""200"" align=""right"" style=""vertical-align: bottom; text-align: center;"">
                         <table>
                             <tr>
-                                <td>Vote Now</td>
+                                <td align=""center"" style=""line-height: 10px;font-size: 20px; text-align:center"">Vote Now</td>
                             </tr>
                             <tr>
-                                <td>  <img width=""80"" src=""https://localhost:7018/img{i}.jpg""></td>
+                                <td align=""center"">  <img width=""150"" src=""https://localhost:7018/img{i}.jpg""></td>
                             </tr>
                             <tr>
-                                <td style=""font-size:14px""><strong style=""font-size:14px"">SCAN HERE</strong></td>
+                                <td align=""center"" style=""line-height: 10px;font-size: 20px; text-align:center"" ><strong style=""line-height: 10px;font-size: 20px;"">SCAN HERE</strong></td>
                             </tr>
                         </table>
 
@@ -447,31 +532,31 @@
             </table>
         <table >
             <tr>
-                <td style = ""text-align: justify;"" colspan=""2""></br>
+                <td style=""line-height: 22px;font-size: 20px; text-align: justify;""  colspan=""2""></br>
                     <p>Dear {Name},</p>
-                    <p style = ""text-align: justify;"">We are pleased to share with you that as of today 87% of your fellow Series A Preferred Shareholders
+                    <p style = ""text-align: justify; line-height: 22px;font-size: 20px;"">We are pleased to share with you that as of today <strong><i>87%</i></strong> of your fellow Series A Preferred Shareholders
                         have submitted proxy votes in favor of both proposals being considered in the special proxy vote.
-                        While there has been tremendous support a passing vote will require a minimum quorum which has not
-                        yet been met – we are close but your vote is critical.</p>
-                    <p>As you may have seen:</p>
-                    <ul>
-                        <li><i>Glass Lewis</i>, a leading proxy vote advisory firm, recommends a vote <strong>“FOR”</strong> both proposals.</li>
-                        <li><i>87% of Series A Shareholders</i> indicated a vote <strong>“FOR”</strong> both proposals as of August 8, 2024.</li>
-                        <li>For your vote to count you’ll need to vote <strong>“FOR”</strong> both proposals by <strong><i><u>August 21, 2024.</u></i></strong></li>
+                        While there has been tremendous support, a passing vote will require a minimum quorum, which has not
+                        yet been met – <i>we are close but your vote is critical.</i></p>
+                    <p  style=""line-height: 22px;font-size: 20px;"">As you may have seen:</p>
+                    <ul style=""style=""line-height: 22px;font-size: 20px;"""">
+                        <li style=""line-height: 22px;font-size: 20px;""><i>Glass Lewis</i>, a leading proxy vote advisory firm, recommends a vote <strong>“FOR”</strong> both proposals.</li>
+                        <li style=""line-height: 22px;font-size: 20px;""><i>87% of Series A Shareholders</i> indicated a vote <strong>“FOR”</strong> both proposals, as of August 8, 2024.</li>
+                        <li style=""line-height: 22px;font-size: 20px;"">For your vote to count, you’ll need to vote <strong>“FOR”</strong> both proposals by <strong><i><u>August 21, 2024.</u></i></strong></li>
                     </ul>
-                    <p style=""font-size: 18px; margin-bottom: 0px;""><strong><u>How to Cast Your Vote:</u></strong></p>
-                    <p style=""margin-bottom: 5px;"">To ensure your vote is counted you have several options:</p>
+                    <p style=""line-height: 18px;font-size: 23px; margin-bottom:4px;""><strong><u>How to Cast Your Vote:</u></strong></p>
+                    <p style=""line-height: 22px;font-size: 20px; margin-bottom: 5px; margin-top:0px;"">To ensure your vote is counted you have several options:</p>
                 </td>
             </tr>
         </table>
 
-        <table style=""background-color: #d1f1fe;"">
+        <table style=""background-color: #d1f1fe; border:1px solid #009bde;"">
             <tr>
-                <td style=""background-color: #d1f1fe;"">
+                <td style=""style=""line-height: 22px;font-size: 20px;"""" style=""background-color: #d1f1fe;"">
                     <ol>
-                        <li style=""margin-bottom: 10px;""><strong><u style=""font-size: 18px; "">Vote Securely Online:</u></strong> Scan the above QR Code or visit<br> <a href=""{URL}"">{URL}</a>.</li>
-                        <li style=""margin-bottom: 10px;""><strong><u style=""font-size: 18px;"">Call to Vote:</u> </strong>You can vote by phone now or reach out with questions regarding the voting process at<br> <strong>844-874-6164.</strong></li>
-                        <li><strong><u style=""font-size: 18px;"">Send an Email:</u></strong> Send an email today to carecloud@allianceadvisors.com indicating that you would like to vote and then you will receive voting instructions.</li>
+                        <li style=""margin-bottom: 10px; line-height: 26px;font-size: 20px;""><strong><u style=""font-size: 23px; text-transform:uppercase; "">Vote Securely Online:</u></strong> Scan the above QR Code or visit:<br> <a style=""text-decoration:none"" href=""{URL}"">{URL}</a>.</li>
+                        <li style=""margin-bottom: 10px; line-height: 26px;font-size: 20px;""><strong><u style=""font-size: 23px; text-transform:uppercase;"">Call to Vote:</u> </strong>You can vote by phone now or reach out with questions regarding the voting process at <strong>844-874-6164.</strong></li>
+                        <li style=""line-height: 22px;font-size: 20px;""><strong><u style=""font-size: 23px; text-transform:uppercase;"">Send an Email:</u></strong> Send an email today to <a style=""text-decoration:none"" href=""mailto:carecloud@allianceadvisors.com"">carecloud@allianceadvisors.com</a> indicating that you would like to vote and then you will receive voting instructions.</li>
                     </ol>
                 </td>
             </tr>
@@ -479,15 +564,23 @@
 
         <table>
             <tr>
-                <td colspan=""2"">
-                    <p style = ""text-align: justify; margin-bottom: 0px; margin-top: 5px;"">To learn more about the special proxy, it is important that you review the Series A Preferred special
+                <td style=""line-height: 22px;font-size: 20px;""colspan=""2"">
+                    <p style = ""text-align: justify; margin-bottom: 0px; margin-top: 5px; line-height: 22px;font-size: 20px;"">To learn more about the special proxy, it is important that you review the Series A Preferred special
                         proxy filings carefully, which are available on the SEC’s website and at </p> 
-                    <a style=""margin-bottom: 10px; display: block;""  href=""https://ir.carecloud.com/series-a-special-proxy"">https://ir.carecloud.com/series-a-special-proxy</a>
+                    <a style=""margin-bottom: 10px; display: block; text-decoration:none""  href=""https://ir.carecloud.com/series-a-special-proxy"">https://ir.carecloud.com/series-a-special-proxy</a>
 
-                    <p style = ""text-align: justify;"">Please don’t hesitate to contact me via email (<a href=""mailto:{emailAddress}"">{emailAddress}</a>) or on my cell ({phone}) if I can be of any assistance. Thank you for your continued support of CareCloud.</p>
-                    <p style=""margin-bottom: 5px;"">Sincerely,</p>
-                    <p style=""margin-bottom: 0px;""><img style=""margin: 0 auto; width:auto; height: 40px;""  src=""https://localhost:7018/signature.jpg""></p>
-                    <p style=""margin-bottom: 5px;"">Stephen A. Snyder<br />President</p>
+                    <p style = ""line-height: 22px;font-size: 20px; text-align: justify; margin-bottom:25px !important; "">Please don’t hesitate to contact me via email (<a style=""text-decoration:none"" href=""mailto:{emailAddress}"">{emailAddress}</a>) or on my cell ({phone}) if I can be of any assistance. Thank you for your continued support of CareCloud.</p>
+                    
+                <table style=""margin-top:10px;"">
+                    <tr>
+                        <td>
+                         <p style=""line-height: 15px;font-size: 20px; margin-bottom: 10px;"">Sincerely,</p>
+                    <p style=""margin-bottom: 0px; margin-top:5px;""><img style=""margin: 0 auto; width:auto; height: 40px; text-decoration:none""  src=""https://localhost:7018/signature.jpg""></p>
+                    <p style=""line-height: 15px;font-size: 20px; margin-bottom: 5px; margin-top:0px;"">Stephen A. Snyder<br />President</p>
+                        </td>    
+                    </tr>
+                </table>
+                   
                 </td>
             </tr>
         </table>
