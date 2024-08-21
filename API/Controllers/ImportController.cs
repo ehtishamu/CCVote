@@ -8,6 +8,16 @@ using QRCoder;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Net.Mail;
+using System.Net;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Office2016.Excel;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Aspose.BarCode.ComplexBarcode;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Wordprocessing;
+using static QRCoder.PayloadGenerator;
+using System;
 
 namespace API.Controllers
 {
@@ -16,10 +26,11 @@ namespace API.Controllers
     public class ImportController : ControllerBase
     {
         private readonly IConverter _converter;
-
-        public ImportController(IConverter converter)
+        private readonly IConfiguration _configuration;
+        public ImportController(IConverter converter, IConfiguration configuration)
         {
             _converter = converter;
+            _configuration = configuration; 
         }
 
         [HttpPost("import")]
@@ -355,10 +366,107 @@ namespace API.Controllers
 
 
         }
+
         private string ToTitleCase(string input)
         {
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             return textInfo.ToTitleCase(input);
+        }
+        [HttpPost("SendEmail")]
+        public async Task<IActionResult> SendEmailtoAll(List<Dictionary<string, string>> KeyValuePairs)
+        {
+
+            try
+            {
+                for (int i = 0; i < KeyValuePairs.Count; i++)
+                {
+                    var dist = KeyValuePairs[i];
+                    string VoteURL = TryGetValueFromDist(dist, "Link");
+                    string EmailAddress = TryGetValueFromDist(dist, "Email ID");
+
+                    string htmlContent = $@"
+<!DOCTYPE html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Email Template</title>
+</head>
+<body>
+    <div class=""template-div"" style=""margin-top: 0px; font-size: 16px;text-align:justify;color:#000000"">
+        <table>
+            <tr>
+                <td>
+                    <b>Subject: CareCloud Series A Preferred Special Proxy Vote</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Dear Shareholder:</p>
+                    <p>Greetings. Our records indicate that you have not yet voted your shares of Series A Preferred Stock (Nasdaq: CCLDO) for the upcoming special meeting.</p>
+                    <p>While we are pleased to share that <a href=""https://ir.carecloud.com/news-events/press-releases/detail/657/87-of-early-proxies-favor-careclouds-series-a-proxy"" style=""color: #467886;""><i>more than 85%</i></a> of your fellow shareholders who have voted to-date have submitted proxy votes <b>“FOR”</b> both proposals, a passing vote will require a minimum quorum, which has not yet been met <i>– we are close, but your vote is critical.</i> If you would like to vote your shares, please do one of the following:</p>
+                    <p>Click the following to <span style=""font-size: 20px;""><a href=""{VoteURL}"" ><u style=""color: #467886;font-weight: bold;"">VOTE NOW</u></a></span></p>
+                    <ul>
+                        <li>Call <b>844-874-6164</b> to vote by phone</li>
+                    </ul>
+                    <p>To learn more about the special proxy, <i style=""text-decoration: underline;"">it is important that you review the Series A Preferred special proxy filings carefully</i>, which are available on the SEC’s website and at <a href=""https://ir.carecloud.com/series-a-special-proxy"" style=""color: #467886;"">https://ir.carecloud.com/series-a-special-proxy</a>.</p>
+                    <p>Please don’t hesitate to contact me via email (ir@carecloud.com) or on my cell (732-873-1351) if I can be of any assistance. Thank you for your continued support of CareCloud.</p>
+                    <p>Sincerely,</p>
+                    <p style=""margin-bottom: 0;"">Stephen A. Snyder</p>
+                    <p style=""margin-top: 0;"">President</p>
+                    <img style=""width: 20%;"" src=""https://www.carecloud.com/wp-content/uploads/2014/08/cc-logo-header-2021.png"" alt="""">
+                    <p>NOTICE: The information contained in this e-mail message is confidential and intended solely for the use of the designated recipient(s) named above. This message may contain privileged attorney-client communications and is thus protected from disclosure. If you are not the intended recipient or an agent responsible for delivering this message to the intended recipient, you have received this communication in error. Any review, distribution, or copying of this message is strictly prohibited. If you have received this communication in error, please notify us immediately by e-mail or telephone and delete the original message in its entirety. If you do not wish to receive any future communications, please reply with “UNSUBSCRIBE.”</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>";
+
+                    await SendEmails(EmailAddress, htmlContent);
+
+                }
+
+                return Ok("Send Email SuccessFully");
+              
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to send email: " + ex.Message);
+                return Ok(ex.Message);
+            }
+        }
+        private async Task<string> SendEmails(string EmailAddress, string HTMLContent)
+        {
+            var mailServerIP = _configuration["MailServices:MailServerIP"];
+            var mailServerPort = int.Parse(_configuration["MailServices:MailServerPort"]);
+            var mailAddress = _configuration["MailServices:MailAddress"];
+            var mailPassword = _configuration["MailServices:MailPassword"];
+            var mailName = _configuration["MailServices:MailName"];
+
+            if (!string.IsNullOrEmpty(EmailAddress))
+            {
+                SmtpClient client = new SmtpClient(mailServerIP)
+                {
+                    Port = mailServerPort,
+                    Credentials = new NetworkCredential(mailAddress, mailPassword),
+                    EnableSsl = true,
+                };
+                MailAddress from = new MailAddress(mailAddress, mailName);
+                MailAddress to = new MailAddress(EmailAddress);
+
+                MailMessage message = new MailMessage(from, to)
+                {
+                    Subject = "CareCloud Series A Preferred Special Proxy Vote",
+                    Body = HTMLContent,
+                    IsBodyHtml = true,
+                };
+                await client.SendMailAsync(message);
+                Console.WriteLine("Email sent successfully!");
+            }
+            return "Email sent successfully!";
+
         }
     }
 }

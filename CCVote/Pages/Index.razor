@@ -21,7 +21,10 @@
 {
     <p>PDF created! <a href="@pdfFileUrl" >Download PDF</a></p>
 }
-    <button @onclick="() => GenerateAll()">Generate All Letter</button>
+  @*   <button @onclick="() => GenerateAll()">Generate All Letter</button> *@
+    <button @onclick="() => SendEmailPostRequest()">Send Email</button>
+
+    
     <table class="table table-striped">
         <thead>
             <tr>
@@ -38,19 +41,23 @@
             }
             @foreach (var dict in KeyValuePairs)
             {
-                 var localvariable=index;
+                var ind = 0;
+                var localvariable=index;
                 index++;
                 <tr>
+
                 @foreach (var kvp in dict)
                 {
-                    <td>@localvariable</td>
-                    
-                        <td>@kvp.Value</td>
-                 
+                        ind++;
+                        @if(ind == 1)
+                        {
+                            <td>@localvariable</td>
+                        }
+                        
+                        <td>@kvp.Value</td>         
                 }
                
-                    <td><button @onclick="() => GeneratePdf(dict,localvariable)">Generate Letter</button></td>
-             
+@*                     <td><button @onclick="() => GeneratePdf(dict,localvariable)">Generate Letter</button></td>*@             
                 </tr>
             }
         </tbody>
@@ -60,7 +67,7 @@
 @code {
     private Dictionary<string, string>[] KeyValuePairs { get; set; }
     private string[] headersValues { get; set; }
-        private string pdfFileUrl;
+    private string pdfFileUrl;
     private string htmlAll = "";
     public string TryGetValueFromDist(Dictionary<string, string> rowData, string key)
     {
@@ -472,14 +479,14 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
         {
             var dist = KeyValuePairs[i];
             // Define the name variable
-        string Name = TryGetValueFromDist(dist, "First") + " " + TryGetValueFromDist(dist, "Last");
-        string Address1 = TryGetValueFromDist(dist, "Street");
-        string Address2 = TryGetValueFromDist(dist, "Address 2");
-        string City = TryGetValueFromDist(dist, "City");
-        string State = TryGetValueFromDist(dist, "State");
-        string Zip = TryGetValueFromDist(dist, "Zip");
-        string ShareNumber = TryGetValueFromDist(dist, "Shares");
-        string URL = TryGetValueFromDist(dist, "Link");
+            string Name = TryGetValueFromDist(dist, "First") + " " + TryGetValueFromDist(dist, "Last");
+            string Address1 = TryGetValueFromDist(dist, "Street");
+            string Address2 = TryGetValueFromDist(dist, "Address 2");
+            string City = TryGetValueFromDist(dist, "City");
+            string State = TryGetValueFromDist(dist, "State");
+            string Zip = TryGetValueFromDist(dist, "Zip");
+            string ShareNumber = TryGetValueFromDist(dist, "Shares");
+            string URL = TryGetValueFromDist(dist, "Link");
             string emailAddress = "ir@carecloud.com";
             string phone = "732-873-1351";
 
@@ -587,7 +594,7 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
                     <a style=""margin-bottom: 10px; display: block; text-decoration:none""  href=""https://ir.carecloud.com/series-a-special-proxy"">https://ir.carecloud.com/series-a-special-proxy</a>
 
                     <p style = ""line-height: 22px;font-size: 20px; text-align: justify; margin-bottom:25px !important; "">Please don’t hesitate to contact me via email <a style=""text-decoration:none"" href=""mailto:{emailAddress}"">{emailAddress}</a> or on my cell {phone} if I can be of any assistance. Thank you for your continued support of CareCloud.</p>
-                    
+
                 <table style=""margin-top:10px;"">
                     <tr>
                         <td>
@@ -598,7 +605,7 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
                         </td>    
                     </tr>
                 </table>
-                   
+
                 </td>
             </tr>
         </table>
@@ -614,7 +621,7 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
 </html>";
         htmlAll = allhtmls;
         await SendPostRequestHTML();
-      // await JSRuntime.InvokeAsync<string>("open", $"{pdfFileUrl}", "_blank");
+        // await JSRuntime.InvokeAsync<string>("open", $"{pdfFileUrl}", "_blank");
         //await JSRuntime.InvokeVoidAsync("openPdfInNewTab", pdfFileUrl);
         //await JSRuntime.InvokeVoidAsync("htmlToPdfAll", allhtmls, "allfile.pdf");
 
@@ -652,7 +659,7 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
     {
         var url = "https://localhost:7029/api/QR/convert";
         var modeldata =new 
-            {
+        {
             htmlContent=htmlAll
         };
         var requestData = modeldata;
@@ -662,7 +669,7 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
             var response = await Http.PostAsJsonAsync(url, requestData);
             if (response.IsSuccessStatusCode)
             {
-                 var pdfBytes = await response.Content.ReadAsByteArrayAsync();
+                var pdfBytes = await response.Content.ReadAsByteArrayAsync();
 
                 // Create a URL for the PDF file
                 pdfFileUrl = $"data:application/pdf;base64,{Convert.ToBase64String(pdfBytes)}";
@@ -671,7 +678,7 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
             }
             else
             {
-               var responseMessage = $"Error: {response.ReasonPhrase}";
+                var responseMessage = $"Error: {response.ReasonPhrase}";
             }
         }
         catch (Exception ex)
@@ -679,5 +686,59 @@ screen {{   html {{ -webkit-print-color-adjust: exact; }}
             var responseMessage = $"Exception: {ex.Message}";
         }
     }
+
+    private async Task SendEmailPostRequest()
+    {
+        try
+        {
+            var requestData = KeyValuePairs;
+            // Call the SendEmail API
+            var response = await Http.PostAsJsonAsync("https://localhost:7029/api/Import/SendEmail",requestData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Optionally, handle the successful response
+                var result = await response.Content.ReadAsStringAsync();
+                Console.WriteLine("Email sent successfully!");
+                // Navigate or display a success message as needed
+            }
+            else
+            {
+                // Handle failure
+                Console.WriteLine("Failed to send email: " + response.ReasonPhrase);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any exceptions
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
+    // private async Task SendEmail()
+    // {
+    //     try
+    //     {
+    //         // Call the SendEmail API
+    //         var response = await Http.GetAsync("https://localhost:7029/api/Import/SendEmail");
+
+    //         if (response.IsSuccessStatusCode)
+    //         {
+    //             // Optionally, handle the successful response
+    //             var result = await response.Content.ReadAsStringAsync();
+    //             Console.WriteLine("Email sent successfully!");
+    //             // Navigate or display a success message as needed
+    //         }
+    //         else
+    //         {
+    //             // Handle failure
+    //             Console.WriteLine("Failed to send email: " + response.ReasonPhrase);
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Handle any exceptions
+    //         Console.WriteLine("An error occurred: " + ex.Message);
+    //     }
+    // }
 }
 
