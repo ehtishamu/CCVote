@@ -226,6 +226,10 @@ namespace API.Controllers
                 // Define the name variable
                 string Name = TryGetValueFromDist(dist, "First") + " " + TryGetValueFromDist(dist, "Last");
                 string Address1 = TryGetValueFromDist(dist, "Street");
+                if(Address1.EndsWith(','))
+                {
+                    Address1 = TryGetValueFromDist(dist, "Street") + " " + TryGetValueFromDist(dist, "Address 2");
+                }
                 string Address2 = TryGetValueFromDist(dist, "Address 2");
                 string City = TryGetValueFromDist(dist, "City");
                 string State = TryGetValueFromDist(dist, "State");
@@ -266,12 +270,15 @@ namespace API.Controllers
 
                                 </tr>
                                 <tr style=""vertical-align: top;"">
-                                    <td style=""line-height: 22px;font-size: 20px; text-align:left;"" width=""50"" align=""left"" style=""vertical-align: top;""><strong style=""margin-top:27px; vertical-align: top; display:block"">Re:</strong></td>
+                                    <td style=""line-height: 22px;font-size: 20px; text-align:left;"" width=""50"" align=""left"" style=""vertical-align: top;""><strong style=""margin-top:27px; vertical-align: top; display:block; font-style:italic;"">Re:</strong></td>
                                     <td style=""line-height: 22px;font-size: 20px;"">
 
                                         <table style=""margin-top:25px; vertical-align: top;"">
                                             <tr>
-                                                <td style=""line-height: 22px;font-size: 20px;"">CareCloud Series A Preferred Special Proxy Vote</td>
+                                                <td style=""line-height: 22px;font-size: 22px; font-weight:bold; font-style:italic; text-transform:uppercase"">Urgent - Second Request</td>
+                                            </tr>
+                                            <tr>
+                                                <td style=""line-height: 22px;font-size: 20px;"">CareCloud Series A Preferred (CCLDP) Special Proxy Vote</td>
                                             </tr>
                                             <tr>
                                                 <td style=""line-height: 22px;font-size: 20px; text-transform:titlecase;"">Shareholder: {ToTitleCase(Name.ToLower())}</td>
@@ -305,15 +312,14 @@ namespace API.Controllers
             <tr>
                 <td style=""line-height: 22px;font-size: 20px; text-align: justify;""  colspan=""2""></br>
                     <p style=""text-transform:titlecase;"">Dear {ToTitleCase(Name.ToLower())},</p>
-                    <p style = ""text-align: justify; line-height: 22px;font-size: 20px;"">We are pleased to share with you that as of today <strong><i>87%</i></strong> of your fellow Series A Preferred Shareholders
+                    <p style = ""text-align: justify; line-height: 22px;font-size: 20px;"">We are pleased to share with you that as of today approximately <strong><i>86%</i></strong> of your fellow Series A Preferred Shareholders
                         have submitted proxy votes in favor of both proposals being considered in the special proxy vote.
                         While there has been tremendous support, a passing vote will require a minimum quorum, which has not
-                        yet been met – <i>we are close but your vote is critical.</i></p>
-                    <p  style=""line-height: 22px;font-size: 20px;"">As you may have seen:</p>
-                    <ul style=""style=""line-height: 22px;font-size: 20px;"""">
+                        yet been met – <i>we are getting close but your vote is critical.</i></p>
+                    <p  style=""line-height: 15px;font-size: 20px; margin-bottom: 5px;"">As you may have seen:</p>
+                    <ul style=""style=""line-height: 22px;font-size: 20px;margin-top:0px;"""">
                         <li style=""line-height: 22px;font-size: 20px;""><i>Glass Lewis</i>, a leading proxy vote advisory firm, recommends a vote <strong>“FOR”</strong> both proposals.</li>
-                        <li style=""line-height: 22px;font-size: 20px;""><i>87% of Series A Shareholders</i> indicated a vote <strong>“FOR”</strong> both proposals, as of August 8, 2024.</li>
-                        <li style=""line-height: 22px;font-size: 20px;"">For your vote to count, you’ll need to vote <strong>“FOR”</strong> both proposals by <strong><i><u>August 21, 2024.</u></i></strong></li>
+                        <li style=""line-height: 22px;font-size: 20px;""><i>86% of Series A Shareholders</i> indicated a vote <strong>“FOR”</strong> both proposals, as of August 20, 2024.</li>
                     </ul>
                     <p style=""line-height: 18px;font-size: 23px; margin-bottom:4px;""><strong><u>How to Cast Your Vote:</u></strong></p>
                     <p style=""line-height: 22px;font-size: 20px; margin-bottom: 5px; margin-top:0px;"">To ensure your vote is counted you have several options:</p>
